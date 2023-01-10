@@ -1,0 +1,84 @@
+{% include "header.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+<!-- Page Header -->
+<header class="masthead" style="background-image: url('{{post.img_url}}')">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto">
+                <div class="post-heading">
+                    <h1>{{post.title}}</h1>
+                    <h2 class="subheading">{{post.subtitle}}</h2>
+                    <span class="meta">Posted by
+              <a href="#">{{post.author.name}}</a>
+                        <!--              #Changed from post.author as post.author is now a User object.-->
+              on {{post.date}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto">
+                {{ post.body|safe }}
+                <hr>
+
+                <div class="clearfix">
+                    {% if current_user.id==1: %}
+                    <a class="btn btn-primary float-right" href='{{url_for("edit_post",post_id=post.id)}}'>Edit Post</a>
+                    {% endif %}
+                </div>
+
+
+                <!--           Comments Area -->
+                <div class="col-lg-12 col-md-10 mx-auto comment">
+                    {{ ckeditor.load() }}
+                    {{ ckeditor.config(name='body') }}
+                    {{ form.body|safe }}
+                    {{ wtf.quick_form(form, novalidate=True, button_map={"submit": "primary"}) }}
+
+                    <ul class="commentList">
+                        {%for comment in comments:%}
+
+                        <li>
+
+                            <div class="commenterImage">
+                                <!--Base Request-->
+                                <!--Gravatar images may be requested just like a normal image, using an IMG tag. To get an image specific to a user, you must first calculate their email hash.-->
+
+                                <!--The most basic image request URL looks like this:-->
+
+                                <!--https://www.gravatar.com/avatar/HASH-->
+
+                                <!--where HASH is replaced with the calculated hash for the specific email address you are requesting. For example, here is my base URL:-->
+
+                                <!--https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50-->
+
+                                <!--When wrapped in an IMG tag, that URL will produce:-->
+
+                                <!--<img src="https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50" />-->
+                                <img src="https://www.gravatar.com/avatar/"/>
+                            </div>
+                            <div class="commentText">
+                                <p>Comment by {{ comment.comentator.name }}:{{comment.text|safe}}</p>
+                                <!--                                in felul asta cu '|' scot tot ce tine de ediotrul textului-->
+
+                            </div>
+                        </li>
+                        {%endfor%}
+                    </ul>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+{% include "footer.html" %}
